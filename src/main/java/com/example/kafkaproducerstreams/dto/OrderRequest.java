@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderRequest {
 
-    private Long id;
+  private Long id;
 
-    private String name;
+  private String name;
 
-    private String type;
+  private String type;
 
-    private Double price;
+  private Double price;
 
-    private Integer quantity;
+  private Integer quantity;
 }

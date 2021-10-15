@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Status {
 
-    private Integer code;
+  private Integer code;
 
-    private String message;
+  private String message;
 }

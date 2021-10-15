@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/producer/order")
 public class OrderController {
 
-    private final OrderMapper mapper;
+  private final OrderMapper mapper;
 
-    private final OrderService service;
+  private final OrderService service;
 
-    @PostMapping
-    public ResponseEntity<Status> sendMessage(@RequestBody OrderRequest request) {
+  @PostMapping
+  public ResponseEntity<Status> sendMessage(@RequestBody OrderRequest request) {
 
-        Order order = mapper.orderRequestToOrder(request);
-        service.sendMessage(order);
-        Status status = new Status(200, "OK");
+    Order order = mapper.orderRequestToOrder(request);
+    service.sendMessage(order);
+    Status status = new Status(200, "OK");
 
-        return ResponseEntity.ok(status);
-    }
+    return ResponseEntity.ok(status);
+  }
 }

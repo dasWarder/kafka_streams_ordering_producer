@@ -15,26 +15,25 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final ObjectMapper mapper;
+  private final ObjectMapper mapper;
 
-    private final KafkaTemplate<String, String> template;
+  private final KafkaTemplate<String, String> template;
 
-    @Transactional
-    public void sendMessage(Order order) {
+  @Transactional
+  public void sendMessage(Order order) {
 
-        log.info("Send an order to consumers");
+    log.info("Send an order to consumers");
 
-        String orderString = orderString(order);
-        ProducerRecord<String, String> record = new ProducerRecord<>("ordering", orderString);
-        template.send(record);
+    String orderString = orderString(order);
+    ProducerRecord<String, String> record = new ProducerRecord<>("ordering", orderString);
+    template.send(record);
+  }
+
+  private String orderString(Order order) {
+    try {
+      return mapper.writeValueAsString(order);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e.getMessage());
     }
-
-    private String orderString(Order order) {
-        try {
-            return mapper.writeValueAsString(order);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
+  }
 }
