@@ -2,20 +2,27 @@ version: "3.1"
 services:
   zookeeper:
     image: 'bitnami/zookeeper:latest'
+    networks:
+      - base
     ports:
       - '2181:2181'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
       - zookeeper:/var/lib/zookeeper/data
+
   kafka:
     image: 'bitnami/kafka:latest'
+    networks:
+      - base
     ports:
-      - '9092:9092'
+      - '9093:9093'
     environment:
       - KAFKA_BROKER_ID=1
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
@@ -23,6 +30,66 @@ services:
     volumes:
     - kafka:/var/lib/kafka/data
 
+#  producer:
+#    image: 'kafka_producer'
+#    restart: always
+#    networks:
+#      - base
+#    ports:
+#    - '8081:8081'
+#    volumes:
+#    - producer:/var/lib/kafka/producer/data
+#    depends_on:
+#      - kafka
+#    links:
+#      - kafka
+
+#  stream:
+#    image: 'kafka_stream'
+#    restart: always
+#    networks:
+#      - base
+#    ports:
+#    - '8080:8080'
+#    volumes:
+#    - stream:/var/lib/kafka/stream/data
+#    depends_on:
+#      - kafka
+#      - producer
+
+#  consumer_basket:
+#    image: 'kafka_basket_consumer'
+#    restart: always
+#    networks:
+#      - base
+#    ports:
+#    - '8083:8083'
+#    volumes:
+#    - basket:/var/lib/kafka/consumer/basket/data
+#    depends_on:
+#      - kafka
+#
+#  consumer_stock:
+#    image: 'kafka_stock_consumer'
+#    restart: always
+#    networks:
+#      - base
+#    ports:
+#    - '8084:8084'
+#    volumes:
+#    - stock:/var/lib/kafka/consumer/stock/data
+#    depends_on:
+#      - kafka
+
 volumes:
   kafka:
   zookeeper:
+#  producer:
+#  basket:
+#  stock:
+#  stream:
+
+
+networks:
+  base:
+    driver: bridge
