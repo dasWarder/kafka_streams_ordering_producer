@@ -1,11 +1,18 @@
-
-
 spring:
+  application:
+    name: producer-ws
   kafka:
     producer:
       bootstrap-servers: 127.0.0.1:9093
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 server:
-  port: 8081
+  port: ${PORT:0}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
